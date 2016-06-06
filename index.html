@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<head>
+<title>main</title>
+<script>
+var child_window;
+function listener(event) {
+	console.log(event.data);
+}
+
+if (window.addEventListener) {
+	window.addEventListener("message", listener);
+} else {
+	// IE fuck
+	window.attachEvent("onmessage", listener);
+}
+
+function openWin() {
+	var window_url = 'child-window.html'; //'https://github.com/denis-t';
+	child_window = window.open(window_url, 'child-win', 'width=640, height=640, toolbar=1');
+}
+
+function createFrame() {
+	var frame = document.querySelector("iframe");
+	if(frame){
+		console.log("frame already exists");
+		return;
+	}
+	var frame_url = 'child-frame.html'; //'https://github.com/denis-t';
+
+	var iframe = document.createElement('iframe');
+	iframe.style.display = "none";
+	iframe.src = frame_url;
+	document.body.appendChild(iframe);
+}
+
+function sendToWin() {
+	if (child_window) {
+		child_window.postMessage({   // ie11 bug can postMessage just to frames not windows 
+			message : "ping"    //ie can just string use JSON.stringify()
+		}, "*")
+	}
+}
+
+function sendToFrame() {
+	var frame = document.querySelector("iframe");
+	if (frame) {
+		frame.contentWindow.postMessage({
+			message : "ping"
+		}, "*")
+	}
+}
+
+</script>
+</head>
+<body>
+<button onclick="openWin()">Open Window</button>
+<button onclick="createFrame()">Create Frame</button>
+<button onclick="sendToWin()">Send ping to window</button>
+<button onclick="sendToFrame()">Send ping to frame</button>
+</body>

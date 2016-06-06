@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+<title>child</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<script>
+function listener(event) {
+  /* check for message origin
+  if (event.origin != 'http://mydomain.com') {
+    return;
+  }
+*/
+if (event.data.message === "ping") {
+        event.source.postMessage({ message: "window:ping ok", result: true }, "*");
+    }   
+}
+
+if (window.addEventListener) {
+  window.addEventListener("message", listener);
+} else {
+  // IE fuck
+  window.attachEvent("onmessage", listener);
+}
+</script>
+</head>
+<body>
+<a href="http://www.example.com">Go to example.com</a>
+Then click the browser Back button when ready.
+</body>
